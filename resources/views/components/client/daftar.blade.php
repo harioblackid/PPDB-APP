@@ -15,7 +15,7 @@
                     </div>
                     <div class="col-md-6 mt-3">
                         <label>Gelombang<sup class="text-danger">*</sup></label>
-                        <input type="text" value="{{$gelombang->gelombang ?? 'Belum Ada Gelombang'}}" name="gelombang"
+                        <input type="text" value="{{ $gelombang->gelombang ?? 'Belum Ada Gelombang' }} " name="gelombang"
                             class="form-control disabl" readonly>
                     </div>
                     <div class="col-md-6 mt-3">
@@ -255,7 +255,7 @@
                     </div>
                     <div class="col-md-6 mt-3">
                         <label>Rekomendasi Masuk</label>
-                        <input type="text" class="form-control" placeholder="Rekomendasi Masuk Telematika" {{$form}}
+                        <input type="text" class="form-control" placeholder="Rekomendasi Masuk SMK PGRI TELAGASARI" {{$form}}
                             @if($gelombang==null) @elseif($gelombang->status_gelombang == 'Buka') name="rekomendasi"
                         @endif value="{{old('rekomendasi')}}">
                     </div>
@@ -306,7 +306,7 @@
 
                 </ul>
                 <p>
-                    Terima kasih telah mendaftar di sekolah kami SMK PGRI Telagasari, jadi bagian telematika adalah
+                    Terima kasih telah mendaftar di sekolah kami SMK PGRI Telagasari, jadi bagian PGRI adalah
                     suatu langkah awal yang baik, Terima kasih.
                 </p>
                 <p>

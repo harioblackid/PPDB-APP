@@ -12,13 +12,13 @@
     <x-client.carousel :slide="$slide" />
     <!-- Carousel End -->
 
-    <!-- Features Start -->
-    <x-client.features />
-    <!-- Features End -->
-
     <!-- Facts Start -->
     <x-client.facts :tentang="$tentang" :jp="$jp" :jt="$jt" :jj="$jj" />
     <!-- Facts End -->
+
+    <!-- Features Start -->
+    <x-client.features />
+    <!-- Features End -->
 
     <!-- Ayo Daftar -->
     <x-client.ayodaftar />
@@ -28,9 +28,6 @@
     <x-client.faq />
     <!-- FAQ End -->
 
-    <!-- Testimonial Start -->
-    <x-client.testimonial />
-    <!-- Testimonial End -->
 
     <!-- Appointment Start -->
     <x-client.contactus />

@@ -12,7 +12,7 @@ Aplikasi ini adalah manajemen PPDB berbasis website yang dibangun dan dikembangk
 - Website Sekolah
 - Monitoring pendaftaran
 - Manajemen Gelombang (Pendaftaran dapat dipisahkan berdasarkan periode)
-- Ekpor data ke File Excel
+- Export data ke File Excel
 
 ## Instalasi
 Jalankan perintah berikut untuk menyalin repository dari GitHub
@@ -23,9 +23,13 @@ Jalankan perintah berikut untuk menginstal dependensi php
 ```
 composer install
 ```
-Jalankan perintah berikut untuk mengatur _environment variable_
+Jalankan perintah berikut untuk mengatur _environment variable_ (Linux)
 ```
 cp .env.example .env
+```
+Jalankan perintah berikut untuk mengatur _environment variable_ (Windows)
+```
+copy .env.example .env
 ```
 Pastikan Anda telah membuat database baru bernama `db_ppdb_app` di MySQL dan silakan tambahkan di file `.env`. <br>
 Jalankan perintah berikut untuk membuat _key_ untuk web app Anda
@@ -35,6 +39,10 @@ php artisan key:generate
 Jalankan perintah berikut untuk membuat skema database
 ```
 php artisan migrate:fresh --seed
+```
+Jalankan perintah berikut untuk menyambungkan folder storage dengan public
+```
+php artisan storage:link
 ```
 Terakhir, jalankan perintah berikut untuk menyalakan web server bawaan laravel 
 ```

@@ -1,3 +1,4 @@
+{{ $page ?? $page = "" }}
 <!-- Sidebar Start -->
 <aside class="left-sidebar">
 <!-- Sidebar scroll-->
@@ -41,12 +42,12 @@
         <li class="sidebar-item">
         <a class="sidebar-link {{ $page === "pendaftar" ? 'active' : '' }}" href="{{ route('pendaftar') }}" aria-expanded="false">
             <span>
-                <i class="bi bi-people-fill fs-6"></i>   
+                <i class="bi bi-people-fill fs-6"></i>
             </span>
             <span class="hide-menu">Pendaftar</span>
         </a>
         </li>
-        
+
         <li class="nav-small-cap">
         <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
         <span class="hide-menu">SETTINGS</span>
@@ -61,7 +62,7 @@
         </li>
         <li class="sidebar-item">
 
-        <a class="sidebar-link {{ $page === "gelombang" ? "active" : '' }}"" href="{{ route('gelombang') }}"  aria-expanded="false">
+        <a class="sidebar-link {{ $page === "gelombang" ? "active" : '' }}" href="{{ route('gelombang') }}"  aria-expanded="false">
 
             <span>
             <i class="bi bi-arrow-clockwise fs-6"></i>
@@ -72,9 +73,17 @@
         <li class="sidebar-item">
             <a class="sidebar-link {{ $page === "informasi_sekolah" ? 'active' : '' }}" href="{{ route ('informasi_sekolah') }}" aria-expanded="false">
                 <span>
+                <i class="bi bi-chat-square-text fs-6"></i>
+                </span>
+                <span class="hide-menu">Blog</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link {{ $page === "category_manager" ? 'active' : '' }}" href="{{ route ('category_manager') }}" aria-expanded="false">
+                <span>
                     <i class="bi bi-info-circle fs-6"></i>
                 </span>
-                <span class="hide-menu">Informasi Sekolah</span>
+                <span class="hide-menu">Category</span>
             </a>
         </li>
         <li class="sidebar-item">
@@ -87,7 +96,7 @@
         </li>
         <li class="nav-small-cap">
         <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-        
+
     </nav>
     <!-- End Sidebar navigation -->
 </div>

@@ -2,9 +2,12 @@
 
 namespace Database\Seeders;
 
+
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,35 +18,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        $toDelete = ['users', 'gelombang', 'pendaftar', 'informasi', 'categories'];
+        Model::unguard();
+        foreach ($toDelete as $table) {
+            DB::table($table)->truncate();
+        }
 
-        \App\Models\User::factory()->create([
-            'name' => 'admin',
-            'email' => 'admin@smk.com',
-            'password' => Hash::make('123456')
-        ]);
+        $this->call(CategorySeeder::class);
+        $this->call(InformasiSeeder::class);
+        $this->call(gelombangSeeder::class);
+        $this->call(pendaftarSeeder::class);
+        $this->call(userSeeder::class);
 
-        $data = [
-            [
-                'gelombang' => 'Gelombang_1',
-                'status_gelombang' => 'Buka'
-            ],
-            [
-                'gelombang' => 'Gelombang_2',
-                'status_gelombang' => 'Tutup'
-            ],
-            [
-                'gelombang' => 'Gelombang_3',
-                'status_gelombang' => 'Tutup'
-            ],
-            [
-                'gelombang' => 'Gelombang_4',
-                'status_gelombang' => 'Tutup'
-            ]
-        ];
-
-        DB::table('gelombang')->insert($data);
-
-
+        Model::reguard();
     }
+
 }

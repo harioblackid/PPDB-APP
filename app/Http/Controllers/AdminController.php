@@ -9,12 +9,15 @@ use App\Models\Kontak;
 use App\Models\Slider;
 use App\Models\Jurusan;
 use App\Models\Tentang;
+use App\Models\Category;
 use App\Models\Gelombang;
 use App\Models\Informasi;
 use App\Models\Pendaftar;
 use Illuminate\Http\Request;
 use App\Models\Youtube as YT;
 use Alaouy\Youtube\Facades\Youtube;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
@@ -28,8 +31,7 @@ class AdminController extends Controller
     public function daftar_admin()
     {
         $jurusan = Jurusan::all();
-        $gelombang = Gelombang::first();
-
+        $gelombang = Gelombang::get()->where('status_gelombang', '=', 'Buka')->first();
 
 
         if($gelombang == null){
@@ -77,38 +79,10 @@ class AdminController extends Controller
     }
     public function pendaftar()
     {
-        $data_pendaftar = Pendaftar::orderBy('id', 'DESC')->where('acc', '0')->where('daful', '0');
-
-        $data_acc       = Pendaftar::orderBy('id', 'DESC')->where('acc', '1');
-
-        $belum_daful    = Pendaftar::orderBy('id', 'DESC')->where('acc', '1')->where('daful', '0');
-
-        $sudah_daful    = Pendaftar::orderBy('id', 'DESC')->where('acc', '1')->where('daful', '1');
-
-        if(request('pendaftar_search'))
-        {
-            $data_pendaftar->where('nama_siswa','like', '%' . request('pendaftar_search') . '%');
-        }
-        else if(request('data_acc_search'))
-        {
-            $data_acc->where('nama_siswa','like', '%' . request('data_acc_search') . '%');
-        }
-        else if(request('belum_daful_search'))
-        {
-            $belum_daful->where('nama_siswa','like', '%' . request('belum_daful_search') . '%');
-        }
-        else if(request('sudah_daful_search'))
-        {
-            $sudah_daful->where('nama_siswa','like', '%' . request('sudah_daful_search') . '%');
-        }
-
-        $belum_daful    = $belum_daful->paginate(5, ['*'], 'belum_daful');
-
-        $sudah_daful    = $sudah_daful->paginate(5, ['*'], 'sudah_daful');
-
-        $data_pendaftar = $data_pendaftar->paginate(5, ['*'], 'pendaftar');
-
-        $data_acc       = $data_acc->paginate(5, ['*'], 'data_acc');
+        $data_pendaftar = Pendaftar::orderBy('id', 'DESC')->where('acc', '0')->where('daful', '0')->get();
+        $data_acc       = Pendaftar::orderBy('id', 'DESC')->where('acc', '1')->get();
+        $belum_daful    = Pendaftar::orderBy('id', 'DESC')->where('acc', '1')->where('daful', '0')->get();
+        $sudah_daful    = Pendaftar::orderBy('id', 'DESC')->where('acc', '1')->where('daful', '1')->get();
 
         $page = "pendaftar";
 
@@ -181,7 +155,7 @@ class AdminController extends Controller
 
     public function hapus_jurusan($id)
     {
-       $data = jurusan::find($id)->delete();
+       jurusan::find($id)->delete();
        return redirect()->back()->with('success', 'Sukses Menghapus Jurusan');
     }
 
@@ -200,7 +174,7 @@ class AdminController extends Controller
     }
 
     public function edit_gelombang($id, $param){
-
+        Gelombang::where(['status_gelombang' => 'Buka'])->update(['status_gelombang' => 'Tutup']);
         Gelombang::where(['id' => $id])->update(['status_gelombang' => $param]);
         return redirect()->back()->with('success', 'Sukses update gelombang');
 
@@ -243,22 +217,140 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Sukses Menghapus Slider');
 
     }
-    
+
+    public function category_manager()
+    {
+        $data = Category::all();
+
+        return view('dashboard/sekolah/category', [
+            'page' => 'category_manager',
+            'data' => $data
+        ]);
+    }
+
+    public function category_edit($id)
+    {
+        $data = Category::find($id);
+
+        return view('Dashboard/sekolah/edit_category', [
+            "page" => "category_manager",
+            "data" => $data
+        ]);
+    }
+
+    public function category_update(Request $req, $id)
+    {
+        $req->validate([
+            "category_name" => "required|unique:categories",
+            "category_slug" => "required|unique:categories"
+        ]);
+
+        Category::find($id)->update(["category_name" => $req->category_name, "category_slug" => strtolower($req->category_slug)]);
+
+
+        return redirect()->route('category_manager')->with('success', 'Sukses mengedit category');
+
+    }
+
+    public function category_delete($id)
+    {
+        Category::find($id)->delete();
+
+        return redirect()->back()->with('success', 'Sukses menghapus category');
+    }
+
+    public function category_store(Request $req)
+    {
+        $req->validate([
+            "category_name" => "required|unique:categories",
+            "category_slug" => "required|unique:categories"
+        ]);
+
+        Category::create(["category_name" => $req->category_name, "category_slug" => strtolower($req->category_slug)]);
+
+        return redirect()->back()->with('success', 'Sukses menambahkan category');
+
+    }
+
     public function informasi_sekolah()
     {
         $page ="informasi_sekolah";
         $data = Informasi::orderBy('id', 'DESC')->get();
-        return view('Dashboard/sekolah/informasi', compact('data', 'page'));
+        $category = Category::all();
+        return view('Dashboard/sekolah/informasi', compact('data', 'page', 'category'));
     }
     public function upload_informasi(Request $req)
     {
-        Informasi::create($req->all());
+        $req->validate([
+            "judul" => 'required',
+            "informasi" => 'required',
+            "banner_image" => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            "category" => 'required|integer'
+        ]);
+
+
+        if($image = $req->file('banner_image')){
+            $image_path = 'storage/';
+            $banner_image = date('YmdHis') . "." . $image->getClientOriginalExtension();
+            $image->move($image_path, $banner_image);
+            $path = "storage/$banner_image";
+        }
+
+
+        Informasi::create(["judul" => $req->judul, "category_id" => $req->category, "informasi" => $req->informasi, "banner_image" => $path]);
         return redirect()->back()->with('success', 'Sukses Upload Informasi Sekolah');
 
     }
+
+    public function edit_informasi($id)
+    {
+        $data = Informasi::find($id);
+        $category = Category::all();
+
+        return view('Dashboard/sekolah/edit_informasi', [
+            "data" => $data,
+            "category" => $category,
+            "page" => 'informasi_sekolah'
+        ]);
+    }
+
+    public function update_informasi(Request $req, $id)
+    {
+        $req->validate([
+            "judul" => 'required',
+            "informasi" => 'required',
+            "category" => 'required|integer',
+            "banner_image" => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
+
+        $data = Informasi::find($id);
+
+        $path = $data->banner_image;
+
+
+        if($image = $req->file('banner_image')){
+            $image_path = 'storage/';
+            $banner_image = date('YmdHis') . "." . $image->getClientOriginalExtension();
+            $image->move($image_path, $banner_image);
+            $path = "storage/$banner_image";
+            File::delete($data->banner_image);
+        }
+
+        $data->update(["judul" => $req->judul, "informasi" => $req->informasi, "banner_image" => $path, "category_id" => $req->category]);
+
+        return redirect()->route('informasi_sekolah')->with('success', 'Sukses Edit Informasi Sekolah');
+
+    }
+
     public function hapus_informasi($id)
     {
-       Informasi::find($id)->delete();
+       $data = Informasi::find($id);
+
+       File::delete($data->banner_image);
+
+
+       $data->delete();
+
        return redirect()->back()->with('success', 'Sukses Menghapus Informasi Sekolah');
     }
     public function galeri()
@@ -289,7 +381,7 @@ class AdminController extends Controller
         $judul = $video->snippet->title;
         $channel = $video->snippet->channelTitle;
 
-        $data = YT::create([
+        YT::create([
             'id_youtube' => $req->input('link'),
             'judul'      => $judul,
             'channel'    => $channel

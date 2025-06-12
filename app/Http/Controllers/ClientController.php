@@ -14,6 +14,8 @@ use App\Models\Youtube;
 use PDF;
 use Illuminate\Http\Request;
 
+use function PHPSTORM_META\type;
+
 class ClientController extends Controller
 {
     public function index()
@@ -39,8 +41,7 @@ class ClientController extends Controller
     public function daftar()
     {
         $jurusan = Jurusan::all();
-        $gelombang = Gelombang::first();
-
+        $gelombang = Gelombang::get()->where('status_gelombang', '=', 'Buka')->first();
 
 
         if($gelombang == null){
@@ -53,7 +54,15 @@ class ClientController extends Controller
             $form = '';
             $button = 'type="submit"';
         }
-        return view('Client/daftar', compact('jurusan', 'gelombang', 'form', 'button'));
+
+        // return view('Client/daftar', compact('jurusan', 'gelombang', 'form', 'button'));
+
+        return view('Client/daftar', [
+            'jurusan' => $jurusan,
+            'gelombang' => $gelombang,
+            'form' => $form,
+            'button' => $button
+        ]);
     }
     public function yes_daftar(Request $req)
     {
@@ -116,22 +125,14 @@ class ClientController extends Controller
         return view('Client/faq');
     }
 
-    public function blog(){
-        return view('Client/blog');
-    }
-
-    public function blogpost(){
-        return view('Client/blogpost');
-    }
-
     public function contactus(){
         return view('Client/contactus');
     }
 
-    public function informasi()
+    public function blog()
     {
         $info = Informasi::orderBy('id', 'DESC')->limit(9)->get();
-        return view('Client/informasi', compact('info'));
+        return view('Client/blog', compact('info'));
     }
     public function baca($id)
     {

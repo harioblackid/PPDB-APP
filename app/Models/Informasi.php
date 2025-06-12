@@ -10,4 +10,15 @@ class Informasi extends Model
     use HasFactory;
     protected $table = 'informasi';
     protected $guarded = [];
+    protected $filable = [
+        'judul',
+        'banner_image',
+        'deskripsi_informasi',
+        'category_id',
+    ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
 }

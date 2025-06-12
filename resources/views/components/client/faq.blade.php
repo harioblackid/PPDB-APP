@@ -1,6 +1,6 @@
    <!-- ======= F.A.Q Section ======= -->
-   <div>
-       <div class="container">
+   <div class="mt-4">
+       <div class="container mb-4">
            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
 
                <h1 class="mb-5">Frequently Asked Questions</h1>
@@ -83,7 +83,7 @@
                            <div id="faq2-content-2" class="accordion-collapse collapse" data-bs-parent="#faqlist2">
                                <div class="accordion-body">
                                    Untuk melihat informasi dapat dilihat
-                                   <a href="{{route('informasi')}}" target="_blank">disini<i
+                                   <a href="{{route('blog')}}" target="_blank">disini<i
                                            class="ri-arrow-right-up-line"></i></a>
                                </div>
                            </div>

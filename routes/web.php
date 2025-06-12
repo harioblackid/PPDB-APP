@@ -5,10 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClientController;
-use App\Http\Controllers\MasukController;
-use App\Http\Controllers\testingController;
 
-Route::group(['prefix' => '/'], function($id = null){
+
+Route::group(['prefix' => '/'], function ($id = null) {
     Route::get('/', [ClientController::class, 'index'])->name('/');
     Route::get('/daftar', [ClientController::class, 'daftar'])->name('daftar');
     Route::post('/daftar/yes', [ClientController::class, 'yes_daftar'])->name('yes_daftar');
@@ -17,13 +16,10 @@ Route::group(['prefix' => '/'], function($id = null){
     Route::get('/cek/{id}/download', [ClientController::class, 'download'])->name('download', $id);
 
     Route::get('/aboutus', [ClientController::class, 'aboutus'])->name('aboutus');
-    Route::get('/informasi', [ClientController::class, 'informasi'])->name('informasi');
+    Route::get('/blog', [ClientController::class, 'blog'])->name('blog');
     Route::get('/informasi/{id}/baca', [ClientController::class, 'baca'])->name('baca', $id);
     Route::get('/faq', [ClientController::class, 'faq'])->name('faq');
     Route::get('/contactus', [ClientController::class, 'contactus'])->name('contactus');
-    Route::get('/blog', [ClientController::class, 'blog'])->name('blog');
-    Route::get('/blogpost', [ClientController::class, 'blogpost'])->name('blogpost');
-
 
 
     Route::get('/foto', [ClientController::class, 'foto'])->name('foto');
@@ -37,7 +33,7 @@ Auth::routes(['register' => false]); // LOGIN
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-Route::group(['prefix' => 'home/pendaftaran'], function($id = null){
+Route::group(['prefix' => 'home/pendaftaran'], function ($id = null) {
     Route::get('daftar_admin', [AdminController::class, 'daftar_admin'])->name('daftar_admin');
     Route::post('daftar_admin/kirim_data', [AdminController::class, 'kirim_data'])->name('kirim_data');
 
@@ -50,15 +46,15 @@ Route::group(['prefix' => 'home/pendaftaran'], function($id = null){
 
 });
 
-Route::group(['prefix' => 'home/sekolah'], function($id = null, $param = null) {
+Route::group(['prefix' => 'home/sekolah'], function ($id = null, $param = null) {
     Route::get('/jurusan', [AdminController::class, 'jurusan'])->name('jurusan');
-    Route::get('/jurusan/{id}/hapus_jurusan', [AdminController::class, 'hapus_jurusan'])->name('hapus_jurusan', $id);
+    Route::delete('/jurusan/{id}/hapus_jurusan', [AdminController::class, 'hapus_jurusan'])->name('hapus_jurusan');
     Route::post('/add_jurusan', [AdminController::class, 'add_jurusan'])->name('add_jurusan');
 
 
-    Route::get('/gelombang',[AdminController::class,'gelombang'])->name('gelombang');
-    
-    Route::get('/gelombang/edit_gelombang/{id}/{param}',[AdminController::class,'edit_gelombang'])->name('edit_gelombang');
+    Route::get('/gelombang', [AdminController::class, 'gelombang'])->name('gelombang');
+
+    Route::get('/gelombang/edit_gelombang/{id}/{param}', [AdminController::class, 'edit_gelombang'])->name('edit_gelombang');
     Route::post('/add_gelombang', [AdminController::class, 'add_gelombang'])->name('add_gelombang');
 
     Route::get('/informasi_slide', [AdminController::class, 'informasi_slide'])->name('informasi_slide');
@@ -68,9 +64,17 @@ Route::group(['prefix' => 'home/sekolah'], function($id = null, $param = null) {
     Route::get('/informasi_sekolah', [AdminController::class, 'informasi_sekolah'])->name('informasi_sekolah');
     Route::post('/informasi_sekolah/post', [AdminController::class, 'upload_informasi'])->name('upload_informasi');
 
-    Route::get('/informasi_sekolah/{id}/hapus_informasi', [AdminController::class, 'hapus_informasi'])->name('hapus_informasi', $id);
+    Route::get('/informasi_sekolah/{id}/edit_informasi', [AdminController::class, 'edit_informasi'])->name('edit_informasi');
+    Route::post('/informasi_sekolah/${id}/update_informasi', [AdminController::class, 'update_informasi'])->name('update_informasi');
+    Route::delete('/informasi_sekolah/{id}/hapus_informasi', [AdminController::class, 'hapus_informasi'])->name('hapus_informasi');
     Route::get('/galeri', [AdminController::class, 'galeri'])->name('galeri');
     Route::post('/galeri/upload_foto', [AdminController::class, 'upload_foto'])->name('upload_foto');
+
+    Route::get('/kategori', [AdminController::class, 'category_manager'])->name('category_manager');
+    Route::get('/kategori/{id}/edit_kategori', [AdminController::class, 'category_edit'])->name('category_edit');
+    Route::post('/kategori/post', [AdminController::class, 'category_store'])->name('upload_kategori');
+    Route::post('/kategori/{id}/edit_kategori', [AdminController::class, 'category_update'])->name('category_update');
+    Route::delete('/kategori/{id}/hapus_kategori', [AdminController::class, 'category_delete'])->name('category_delete');
 
     Route::post('/galeri/upload_video', [AdminController::class, 'upload_video'])->name('upload_video');
 

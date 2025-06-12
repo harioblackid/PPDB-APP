@@ -1,35 +1,138 @@
-<div class="container-xxl py-5">
-    <div class="container">
-      <div class="text-center mx-auto" style="max-width: 500px">
-        <h1 class="display-6 mb-5">
-          Informasi SMK PGRI Telagasari
-        </h1>
-      </div>
-      <div class="row g-4 justify-content-center">
-       @forelse($info as $infor)
-        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-          <div class="service-item rounded h-100 p-5">
-            <div class="d-flex align-items-center ms-n5 mb-4">
-              <div
-                class="service-icon flex-shrink-0 bg-primary rounded-end me-4"
-              >
-                <img
-                  class="img-fluid"
-                  src="img/icon/icon-04-light.png"
-                  alt=""
-                />
-              </div>
-              <h4 class="mb-0">{{$infor->judul}}</h4>
+<div class="container mt-5">
+    <div class="row">
+        <!-- -----------x---------- LOOP -------------x------------>
+        @forelse ($info as $infor)
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card">
+                <div class="blog-image">
+                    <img src="{{ asset($infor->banner_image) }}">
+                    <div class="tag bg-primary">blog</div>
+                </div>
+                <div class="blog-content">
+                    <div class="blog-title">{{$infor->judul}}</div>
+                    <div class="blog-subtitle">SMK PGRI Telagasari</div>
+                    <p class="blog-desc">{{Str::limit($infor->deskripsi_informasi, 100, '.....')}} <a
+                            href="{{route('baca', $infor->id)}}">Read
+                            More</a></p>
+                    <div class="blog-footer">
+                        <div class="blog-avatar"><img src="{{asset('img/user.png')}}"></div>
+                        <div>
+                            <span class="blog-author">Administrator</span>
+                            <div class="blog-post">
+                                <span><i class="fa fa-clock-o"></i>{{ timestampToAgo($infor->created_at) }}</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-sm"><i class="fa fa-share-alt"></i></button>
+                    </div>
+                </div>
             </div>
-            <p class="mb-4">
-             {{Str::limit($infor->deskripsi_informasi, 100, '.....')}}
-            </p>
-            <a class="btn btn-light px-3" href="{{route('baca', $infor->id)}}">Read More</a>
-          </div>
         </div>
         @empty
         <div class="d-flex justify-content-center">Tidak Ada Informasi Apapun</div>
-       @endforelse
-      </div>
+
+        @endforelse
+        <!-- -----------x---------- END LOOP -------------x------------>
     </div>
-  </div>
+</div>
+</body>
+
+</html>
+
+<style>
+.blog-image {
+    position: relative;
+}
+
+.blog-image img {
+    width: 100%;
+}
+
+.date {
+    width: 39px;
+    height: 39px;
+    border-radius: 50%;
+    position: absolute;
+    top: 3%;
+    right: 3%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #ffffff;
+    font-size: 13px;
+    line-height: 1;
+    font-weight: 500;
+}
+
+.tag {
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 0 15px;
+    color: #ffffff;
+}
+
+.blog-content {
+    padding: 25px 15px;
+}
+
+.blog-title {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.blog-subtitle {
+    font-weight: 400;
+    color: #015fc9;
+    margin-bottom: 16px;
+}
+
+.blog-desc {
+    font-size: 14px;
+}
+
+.blog-desc a {
+    text-decoration: none;
+    color: #015fc9;
+    font-weight: 500;
+}
+
+.blog-footer {
+    display: flex;
+    align-items: center;
+    margin-top: 35px;
+}
+
+.blog-author {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.blog-post {
+    font-size: 12px;
+    color: #b3b2b2;
+}
+
+.blog-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: block;
+    overflow: hidden;
+    margin-right: 20px;
+}
+
+.blog-avatar img {
+    width: 100%;
+}
+
+.blog-comment {
+    margin-left: 10px;
+}
+
+.blog-footer .btn {
+    margin-left: auto;
+}
+</style>

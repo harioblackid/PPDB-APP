@@ -3,14 +3,18 @@
 <x-client.head />
 
 <body>
+    <!-- Spinner Start -->
+    <x-client.spinner />
+    <!-- Spinner End -->
+
 
     <!-- Navbar Start -->
     <x-client.navbar />
     <!-- Navbar End -->
 
-    <!-- FAQ -->
-    <x-client.blog />
-    <!-- FAQ End -->
+    <!-- Service Start -->
+    <x-client.service :info="$info" />
+    <!-- Service End -->
 
     <!-- Footer Start -->
     <x-client.footer />
